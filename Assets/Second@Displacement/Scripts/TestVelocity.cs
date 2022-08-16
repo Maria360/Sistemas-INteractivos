@@ -33,7 +33,7 @@ public class TestVelocity : MonoBehaviour
         if (Input.GetKeyDown(KeyCode.Space))
         {
             velocity *= 0;
-            acceleration = accelerations[(currentIndex++) % accelerations.Length];
+            acceleration = accelerations[(++currentIndex) % accelerations.Length];
         }
         Move();
     }
