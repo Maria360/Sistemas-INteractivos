@@ -10,6 +10,7 @@ public class MoverPhysics : MonoBehaviour
 
     [SerializeField] float mass = 1;
     [SerializeField] MyVector wind;
+    [SerializeField] float frictionCoefficient;
 
     [Header("Other")]
     [Range(0, 1)] [SerializeField] float damping = 1;
@@ -21,10 +22,16 @@ public class MoverPhysics : MonoBehaviour
     }
     private void FixedUpdate()
     {
-        MyVector weight = new MyVector(0, mass * gravity) ;
+        float weightScalar = mass * gravity;
+        MyVector weight = new MyVector(0, weightScalar) ;
+        MyVector friction = velocity.normalized * frictionCoefficient * weightScalar * -1;
         acceleration *= 0f;
+
         ApplyForce(wind);
         ApplyForce(weight);
+        ApplyForce(friction);
+
+        friction.Draw(Color.black);
         Move();
     }
     private void Update()

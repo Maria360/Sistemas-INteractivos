@@ -2,10 +2,24 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 [System.Serializable]
-public struct MyVector 
+public struct MyVector
 {
     public float x;
     public float y;
+    public float magnitude => Mathf.Sqrt(x * x + y * y);
+    //public MyVector normalized => new MyVector(x / magnitude, y/magnitude); 
+    public MyVector normalized
+    {
+        get
+        {
+            float distance = magnitude;
+            if (distance < 0.0001f)
+            {
+                return new MyVector(0, 0);
+            }
+            return new MyVector(x / distance, y / distance);
+        }
+    }
     public MyVector(float x, float y)
     {
         this.x = x;
@@ -33,6 +47,20 @@ public struct MyVector
     public MyVector Lerp(MyVector myVector, float t)
     {
         return this + (myVector - this) * t;
+    }
+    public void Normalize()
+    {
+        float magnitudeCache = magnitude;
+        if (magnitudeCache < 0.001)
+        {
+            x = 0;
+            y = 0;
+        }
+        else
+        {
+            x = x / magnitudeCache;
+            y = y / magnitudeCache;
+        }
     }
     public static MyVector operator+(MyVector v1, MyVector v2)
     {
