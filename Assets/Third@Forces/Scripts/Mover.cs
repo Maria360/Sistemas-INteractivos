@@ -5,7 +5,6 @@ using UnityEngine;
 public class Mover : MonoBehaviour
 {
     [SerializeField] Transform target;
-    //[SerializeField] MyVector force;
     private MyVector position;
     private MyVector displacement;
     [SerializeField] private MyVector velocity; //integral de la aceleracion
@@ -62,4 +61,5 @@ public class Mover : MonoBehaviour
         transform.position = position;
 
     }
+   
 }
