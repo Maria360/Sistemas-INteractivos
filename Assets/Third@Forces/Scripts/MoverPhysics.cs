@@ -10,9 +10,10 @@ public class MoverPhysics : MonoBehaviour
 
     [SerializeField] float mass = 1;
     [SerializeField] MyVector wind;
-    [SerializeField] float frictionCoefficient;
+    [Range(0, 1)] [SerializeField] float frictionCoefficient;
 
     [Header("Other")]
+    [SerializeField] bool useFluidFriction = false;
     [Range(0, 1)] [SerializeField] float damping = 1;
     [Range(0, 1)] [SerializeField] float gravity =-9.8f;
 
@@ -24,22 +25,31 @@ public class MoverPhysics : MonoBehaviour
     {
         float weightScalar = mass * gravity;
         MyVector weight = new MyVector(0, weightScalar) ;
-        MyVector friction = velocity.normalized * frictionCoefficient * weightScalar * -1;
+        MyVector friction = velocity.normalized * frictionCoefficient * -weightScalar * -1;
         acceleration *= 0f;
 
         ApplyForce(wind);
         ApplyForce(weight);
         ApplyForce(friction);
+        if (useFluidFriction && position.y <= 0f)
+        {
+            float velocityMagnitude = velocity.magnitude;
+            float frontalArea = transform.localScale.x;
+            MyVector fluidFriction = velocity.normalized * frontalArea * velocityMagnitude * velocityMagnitude * -0.5f;
+            ApplyForce(fluidFriction);
+            fluidFriction.Draw2(position, Color.magenta);
+        }
 
-        friction.Draw(Color.black);
+        friction.Draw2(position,Color.black);
         Move();
     }
     private void Update()
     {
         //Debug vectors
-        position.Draw(Color.red);
+        //position.Draw(Color.red);
         velocity.Draw2(position, Color.cyan);
-        acceleration.Draw2(position, Color.white);
+
+        //acceleration.Draw2(position, Color.white);
         //Move();
     }
     public void Move()
