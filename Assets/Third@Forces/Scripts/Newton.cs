@@ -2,17 +2,16 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class MoveAttraction : MonoBehaviour
+public class Newton : MonoBehaviour
 {
     private MyVector position;
     private MyVector acceleration;
 
-    [SerializeField] float mass = 1;
-    [SerializeField] float BHmass = 1;
+
     [SerializeField] private MyVector velocity;
+    [SerializeField] Newton blackHole;
 
-
-    [SerializeField] Transform blackHole;
+    public float mass = 1;
 
 
     [Header("Other")]
@@ -25,9 +24,9 @@ public class MoveAttraction : MonoBehaviour
     }
     private void FixedUpdate()
     {
-        MyVector r = blackHole.position - transform.position;
+        MyVector r = blackHole.transform.position - transform.position;
         float rMagnitude = r.magnitude;
-        MyVector F = r.normalized * (1 / BHmass * mass / rMagnitude * rMagnitude);
+        MyVector F = r.normalized * (1 / blackHole.mass * mass / rMagnitude * rMagnitude);
 
         float weightScalar = mass * gravity;
         MyVector weight = new MyVector(0, weightScalar);
@@ -56,20 +55,11 @@ public class MoveAttraction : MonoBehaviour
         velocity += acceleration * Time.fixedDeltaTime;
         position += velocity * Time.fixedDeltaTime;
 
-        //check bounds
-        //if (Mathf.Abs(position.x) >= 5)
-        //{
-        //    position.x = Mathf.Sign(position.x) * 5;
-        //    velocity.x *= -1;
-        //    velocity *= damping;
-        //}
-        //if (Mathf.Abs(position.y) >= 5)
-        //{
-        //    position.y = Mathf.Sign(position.y) * 5;
-        //    velocity.y *= -1;
-        //    velocity *= damping;
-        //}
-
+        if (velocity.magnitude >= 3f)
+        {
+            velocity.Normalize();
+            velocity *= 3;
+        }
         //update position
         transform.position = position;
 
